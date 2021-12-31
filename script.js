@@ -14,14 +14,15 @@ let lms = null;
 let ls = null;
 let lmin = null;
 let lhrs = null;
-let temp_ms = null;
-let temp_s = null;
-let temp_min = null;
-let temp_hrs = null;
+let lapToggle = 0;
+let flag = 0;
+let pauseOnLap = 0;
 
 let time = null;
+let ltime = null;
 
 let [hours, minutes, seconds, milliseconds] = [0, 0, 0, 0];
+let [lhours, lminutes, lseconds, lmilliseconds] = [0, 0, 0, 0];
 
 const setTime = () => {
   milliseconds += 4;
@@ -58,77 +59,78 @@ const displayTime = () => {
   timer.innerHTML = `${hrs} : ${min} : ${s} : ${ms}`;
 };
 
+const displayLapTime = () => {
+  let trow = document.createElement("tr");
+  let tableDescription_1 = document.createElement("td");
+  tableDescription_1.innerHTML = lapCount;
+  let tableDescription_2 = document.createElement("td");
+  tableDescription_2.innerHTML = `${lhrs} : ${lmin} : ${ls} : ${Math.round(
+    lms / 10
+  )}`;
+  let tableDescription_3 = document.createElement("td");
+  tableDescription_3.innerHTML = `${hrs} : ${min} : ${s} : ${Math.round(
+    ms / 10
+  )}`;
+  trow.appendChild(tableDescription_1);
+  trow.appendChild(tableDescription_2);
+  trow.appendChild(tableDescription_3);
+  tableBody.appendChild(trow);
+};
+
 const calculateTime = () => {
-  lapCount = lapCount + 1;
-  let lapTimeMilliseconds = null;
-  let lapTimeSeconds = null;
-  let lapTimeMinutes = null;
-  let lapTimeHours = null;
-  let flag = 1;
-
   if (lapCount === 1) {
-    flag = 0;
-    temp_hrs = hrs;
-    temp_min = min;
-    temp_s = s;
-    temp_ms = ms;
-    lapTimeMilliseconds = ms;
-    lapTimeHours = hrs;
-    lapTimeSeconds = s;
-    lapTimeMinutes = min;
+    lmilliseconds += 4;
+    if (lmilliseconds > 999) {
+      lmilliseconds = 0;
+      lseconds++;
+    }
+    if (lseconds === 60) {
+      lminutes++;
+      lseconds = 0;
+    }
+    if (lminutes === 60) {
+      lhours++;
+      lminutes = 0;
+    }
   } else {
-    ms - temp_ms < 0
-      ? (lapTimeMilliseconds = 1000 + (ms - temp_ms))
-      : (lapTimeMilliseconds = ms - temp_ms);
-
-    ms - temp_ms < 0 && min > temp_min
-      ? (lapTimeSeconds = (min - temp_min) * 60 + (s - temp_s) - 1)
-      : ms - temp_ms < 0
-      ? (lapTimeSeconds = s - temp_s - 1)
-      : s - temp_s < 0
-      ? (lapTimeSeconds = 60 + (s - temp_s))
-      : (lapTimeSeconds = s - temp_s);
-
-    s - temp_s < 0 && hrs > temp_hrs
-      ? (lapTimeMinutes = (hrs - temp_hrs) * 60 + (min - temp_min) - 1)
-      : s - temp_s < 0
-      ? (lapTimeMinutes = min - temp_min - 1)
-      : min - temp_min < 0
-      ? (lapTimeMinutes = 60 + (min - temp_min))
-      : (lapTimeMinutes = min - temp_min);
-
-    min - temp_min < 0
-      ? (lapTimeHours = hrs - temp_hrs - 1)
-      : (lapTimeHours = hrs - temp_hrs);
+    if (flag === 0) {
+      [lhours, lminutes, lseconds, lmilliseconds] = [0, 0, 0, 0];
+      flag = 1;
+    }
+    lmilliseconds += 4;
+    if (lmilliseconds > 999) {
+      lmilliseconds = 0;
+      lseconds++;
+    }
+    if (lseconds === 60) {
+      lminutes++;
+      lseconds = 0;
+    }
+    if (lminutes === 60) {
+      lhours++;
+      lminutes = 0;
+    }
   }
-  if (flag !== 0) {
-    temp_hrs = hrs;
-    temp_min = min;
-    temp_s = s;
-    temp_ms = ms;
-    lms =
-      lapTimeMilliseconds < 10
-        ? `00${lapTimeMilliseconds}`
-        : lapTimeMilliseconds < 100
-        ? `0${lapTimeMilliseconds}`
-        : lapTimeMilliseconds;
 
-    ls = lapTimeSeconds < 10 ? `0${lapTimeSeconds}` : lapTimeSeconds;
+  lms =
+    lmilliseconds < 10
+      ? `00${lmilliseconds}`
+      : lmilliseconds < 100
+      ? `0${lmilliseconds}`
+      : lmilliseconds;
 
-    lmin = lapTimeMinutes < 10 ? `0${lapTimeMinutes}` : lapTimeMinutes;
+  ls = lseconds < 10 ? `0${lseconds}` : lseconds;
 
-    lhrs = lapTimeHours < 10 ? `0${lapTimeHours}` : lapTimeHours;
-  } else {
-    lms = lapTimeMilliseconds;
-    ls = lapTimeSeconds;
-    lmin = lapTimeMinutes;
-    lhrs = lapTimeHours;
-  }
+  lmin = lminutes < 10 ? `0${lminutes}` : lminutes;
+
+  lhrs = lhours < 10 ? `0${lhours}` : lhours;
 };
 
 resetButton.addEventListener("click", function () {
   clearInterval(time);
+  clearInterval(ltime);
   [hours, minutes, seconds, milliseconds] = [0, 0, 0, 0];
+  [lhours, lminutes, lseconds, lmilliseconds] = [0, 0, 0, 0];
   displayTime();
   pauseButton.style.display = "none";
   startButton.style.display = "block";
@@ -142,10 +144,16 @@ resetButton.addEventListener("click", function () {
   lhrs = 0;
   ls = 0;
   lms = 0;
+  flag = 0;
+  pauseOnLap = 0;
 });
 
 pauseButton.addEventListener("click", function () {
   clearInterval(time);
+  if (ltime && pauseOnLap === 0) {
+    clearInterval(ltime);
+    pauseOnLap = 1;
+  }
   pauseButton.style.display = "none";
   startButton.style.display = "block";
   lapButton.style.display = "none";
@@ -153,6 +161,10 @@ pauseButton.addEventListener("click", function () {
 
 startButton.addEventListener("click", function () {
   clearInterval(time);
+  if (pauseOnLap === 1) {
+    ltime = setInterval(calculateTime, 4);
+    pauseOnLap = 0;
+  }
   time = setInterval(setTime, 4);
   startButton.style.display = "none";
   pauseButton.style.display = "block";
@@ -160,20 +172,23 @@ startButton.addEventListener("click", function () {
 });
 
 lapButton.addEventListener("click", function () {
+  lapCount = lapCount + 1;
+
+  if (lapCount === 1) {
+    lms = ms;
+    lhrs = hrs;
+    ls = s;
+    lmin = min;
+    displayLapTime();
+    ltime = setInterval(calculateTime, 4);
+  } else {
+    flag = 0;
+    clearInterval(ltime);
+    displayLapTime();
+    ltime = setInterval(calculateTime, 4);
+  }
+
   lapContainer.style.display = "block";
-  calculateTime();
-  let trow = document.createElement("tr");
-  trow.classList.add("gg");
-  let tableDescription_1 = document.createElement("td");
-  tableDescription_1.innerHTML = lapCount;
-  let tableDescription_2 = document.createElement("td");
-  tableDescription_2.innerHTML = `${lhrs} : ${lmin} : ${ls} : ${lms}`;
-  let tableDescription_3 = document.createElement("td");
-  tableDescription_3.innerHTML = `${hrs} : ${min} : ${s} : ${ms}`;
-  trow.appendChild(tableDescription_1);
-  trow.appendChild(tableDescription_2);
-  trow.appendChild(tableDescription_3);
-  tableBody.appendChild(trow);
 });
 
 const buttonAnimationHandler = () => {
