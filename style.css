@@ -7,13 +7,15 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
   align-items: center;
   min-height: 100vh;
   -ms-user-select: none;
   -webkit-user-select: none;
   user-select: none;
+  min-width: 100vw;
+  font-family: "Roboto", sans-serif;
 }
 
 #main-container {
@@ -25,7 +27,7 @@ body {
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 0 20px rgba(19, 18, 18, 0.781);
+  box-shadow: 0 0 15px rgba(19, 18, 18, 0.781);
 }
 
 #sub-container {
@@ -33,14 +35,45 @@ body {
   background-color: rgba(230, 16, 16, 0.52);
   padding: 40px 0;
   backdrop-filter: blur(4px);
-  font-family: "Roboto mono", monospace;
+  font-family: "Roboto", sans-serif;
   color: #ffffff;
   font-size: clamp(1.25rem, 5.5vw, 3rem);
   display: flex;
   align-items: center;
   justify-content: space-around;
   border-radius: 5px;
-  box-shadow: 0 0 20px rgba(253, 30, 0, 0.781);
+  letter-spacing: 5px;
+  box-shadow: 0 0 15px rgba(253, 30, 0, 0.781);
+}
+
+#lap {
+  display: none;
+}
+
+#laps {
+  display: none;
+  background: rgb(202, 196, 196);
+  height: 30vh;
+  width: 350px;
+  border-radius: 10px;
+  overflow-y: auto;
+  padding: 10px 20px 0 10px;
+  line-height: 40px;
+  box-shadow: 0 0 10px rgba(19, 18, 18, 0.781);
+  text-align: center;
+  font-size: clamp(0.45rem, 4vw, 1.05rem);
+}
+
+table {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+
+  letter-spacing: 0.5px;
+}
+
+.lap-item {
 }
 
 .controls {
@@ -55,29 +88,52 @@ body {
   background-color: #ffffff;
   color: #141313;
   border: none;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(0.25rem, 3.5vw, 1.05rem);
   font-weight: 600;
   border-radius: 5px;
   cursor: pointer;
   outline: none;
+  letter-spacing: 0.5px;
 }
 
-@media screen and (max-width: 768px) {
+.controls #pause {
+  display: none;
+}
+
+@media screen and (max-width: 576px) {
   #main-container {
     width: 80%;
     min-width: 80%;
     padding: 40px 0;
   }
+
   #sub-container {
     width: 110%;
     min-width: 110%;
     padding: 20px 0;
   }
+
+  #laps {
+    width: 80vw;
+  }
+
   .controls button {
     padding: 5px 10px;
   }
 
   .controls {
     margin: 35px auto 0 auto;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  body {
+    flex-flow: column;
+  }
+
+  #laps {
+    min-width: 55vw;
+    text-align: center;
   }
 }
