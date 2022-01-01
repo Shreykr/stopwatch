@@ -91,9 +91,6 @@ table {
   letter-spacing: 0.5px;
 }
 
-.lap-item {
-}
-
 .controls {
   width: 80%;
   margin: 60px auto 0 auto;
@@ -113,6 +110,11 @@ table {
   cursor: pointer;
   outline: none;
   letter-spacing: 0.5px;
+  transform: scale(1);
+}
+
+button:active {
+  transform: scale(0.8);
 }
 
 .controls #pause {
