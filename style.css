@@ -26,14 +26,22 @@ body {
   padding: 0;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   min-height: 100vh;
+  min-width: 100vw;
   -ms-user-select: none;
   -webkit-user-select: none;
   user-select: none;
-  min-width: 100vw;
   font-family: "Roboto", sans-serif;
+}
+
+.github-corner {
+  position: fixed;
+  top: 0;
+  right: 0;
+  transform: scale(1.25);
+  -webkit-tap-highlight-color: transparent;
 }
 
 #main-container {
@@ -80,6 +88,7 @@ body {
   box-shadow: 0 0 10px rgba(19, 18, 18, 0.781);
   text-align: center;
   font-size: clamp(0.45rem, 4vw, 1.05rem);
+  margin-left: 9vw;
 }
 
 table {
@@ -153,7 +162,14 @@ button:active {
   }
 
   #laps {
+    height: 25vh;
     min-width: 55vw;
     text-align: center;
+    margin-left: 0px;
+    margin-top: 50px;
+  }
+
+  .github-corner {
+    transform: scale(1);
   }
 }

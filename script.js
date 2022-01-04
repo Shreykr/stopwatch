@@ -191,4 +191,28 @@ lapButton.addEventListener("click", function () {
   lapContainer.style.display = "block";
 });
 
+const buttonAnimationHandler = () => {
+  let buttonState = document.querySelectorAll("button");
+  buttonState.forEach((button) => {
+    button.addEventListener("mousedown", function () {
+      this.style.transform = "scale(0.8)";
+    });
+    button.addEventListener("mouseup", function () {
+      this.style.transform = "scale(1)";
+    });
+    button.addEventListener("mouseleave", function () {
+      this.style.transform = "scale(1)";
+    });
+    button.addEventListener("touchstart", function () {
+      this.style.transform = "scale(0.8)";
+    });
+    button.addEventListener("touchend", function () {
+      this.style.transform = "scale(1)";
+    });
+    button.addEventListener("touchmove", function () {
+      this.style.transform = "scale(1)";
+    });
+  });
+};
+
 buttonAnimationHandler();
